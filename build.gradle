@@ -1,11 +1,17 @@
 buildscript {
-    ext {
-        springBootVersion = "1.4.2.RELEASE"
-        springVersion = "4.3.4.RELEASE"
-        hibernateVersion = "5.0.11.Final"
-        slf4jVersion = "1.7.21"
+ ext {
+        springBootVersion = "1.5.7.RELEASE"
+        springVersion = "4.3.8.RELEASE"
+        mysqlVersion = "5.1.39"
+        springCloudDependenciesVersion = "Edgware.RELEASE"
+        springCloudServicesVersion = "1.6.0.RELEASE"
+        springCloudSsoVersion = "2.0.0.RELEASE"
+        hibernateVersion = "5.2.11.Final"
+        slf4jVersion ="1.7.10"
+        commonsLangVersion = "2.4"
         junitVersion = "4.12"
     }
+
 
     repositories {
         mavenCentral()
