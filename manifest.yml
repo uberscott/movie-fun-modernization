@@ -1,4 +1,3 @@
----
 memory: 1G
 instances: 1
 applications:
@@ -7,14 +6,24 @@ applications:
   services:
   - album-database
   - moviefun-s3
+  routes:
+    - route: album-service-sw.apps.pikes.pal.pivotal.io
 - name: movie-service
   path: applications/movie-service/build/libs/movie-service-1.1.0-SNAPSHOT.jar
   services:
   - movie-database
+  - moviefun-s3
+  routes:
+    - route: movie-service-sw.apps.pikes.pal.pivotal.io
+
 - name: movie-fun-app
   path: applications/movie-fun-app/build/libs/movie-fun-app-1.1.0-SNAPSHOT.war
   services:
   - moviefun-s3
   env:
-    ALBUMS_URL: http://album-service.cfapps-02.haas-66.pez.pivotal.io/albums
-    MOVIES_URL: http://movie-service.cfapps-02.haas-66.pez.pivotal.io/movies
+    ALBUMS_URL: http://album-service-sw.apps.pikes.pal.pivotal.io/albums
+    MOVIES_URL: http://movie-service-sw.apps.pikes.pal.pivotal.io/movies
+  routes:
+    - route: moviefun-sw.apps.pikes.pal.pivotal.io
+
+
