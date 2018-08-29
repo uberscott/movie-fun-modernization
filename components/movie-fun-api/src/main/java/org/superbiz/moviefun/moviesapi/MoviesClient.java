@@ -1,5 +1,7 @@
 package org.superbiz.moviefun.moviesapi;
 
+        import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;
         import org.springframework.core.ParameterizedTypeReference;
         import org.springframework.web.client.RestOperations;
         import org.springframework.web.util.UriComponentsBuilder;
@@ -13,15 +15,20 @@ public class MoviesClient {
     private String moviesUrl;
     private RestOperations restOperations;
 
+    private final Logger logger;
+
     private static ParameterizedTypeReference<List<MovieInfo>> movieListType = new ParameterizedTypeReference<List<MovieInfo>>() {
     };
 
     public MoviesClient(String moviesUrl, RestOperations restOperations) {
         this.moviesUrl = moviesUrl;
         this.restOperations = restOperations;
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
     public void addMovie(MovieInfo movie) {
+
+logger.info( "creating movie : "+moviesUrl);
         restOperations.postForEntity(moviesUrl, movie, MovieInfo.class);
     }
 

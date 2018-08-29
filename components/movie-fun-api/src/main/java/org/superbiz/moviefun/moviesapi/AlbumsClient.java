@@ -15,12 +15,18 @@ package org.superbiz.moviefun.moviesapi; /**
  * limitations under the License.
  */
 
+import org.apache.tika.io.IOUtils;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.superbiz.moviefun.blobstore.Blob;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
@@ -40,7 +46,7 @@ public class AlbumsClient {
     }
 
     public void addAlbum(AlbumInfo album) {
-        restOperations.postForEntity(albumsUrl,album,AlbumInfo.class);
+        restOperations.postForEntity(albumsUrl+"/create",album,AlbumInfo.class);
     }
 
     public AlbumInfo find(long id) {
@@ -62,6 +68,44 @@ public class AlbumsClient {
     public void updateAlbum(AlbumInfo album) {
         restOperations.put(albumsUrl+ "/" + album.getId(), album);
     }
+
+
+
+   public void uploadCover( Long albumId, InputStream contentStream, String contentType ) throws IOException {
+
+       byte[] payload = IOUtils.toByteArray(contentStream);
+       HttpHeaders headers = new HttpHeaders();
+       headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+
+       LinkedMultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
+       headerMap.add("Content-disposition", "form-data; name=file;" );
+       headerMap.add("Content-type", contentType );
+
+       HttpEntity<byte[]> doc = new HttpEntity<byte[]>(payload, headerMap);
+
+       LinkedMultiValueMap<String, Object> multipartReqMap = new LinkedMultiValueMap<>();
+       multipartReqMap.add("file", doc);
+
+       UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(albumsUrl+"/"+albumId+"/cover");
+
+       HttpEntity<LinkedMultiValueMap<String, Object>> reqEntity = new HttpEntity<>(multipartReqMap, headers);
+       ResponseEntity response = restOperations.exchange(builder.build().toUri(), HttpMethod.POST, reqEntity, Void.class );
+    }
+
+    public CoverInfo getCover(long albumId) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(albumsUrl+"/"+albumId+"/cover");
+
+        HttpEntity<byte[]> entity = restOperations.getForEntity(builder.build().toUri(), byte[].class);
+
+        CoverInfo rtn = new CoverInfo();
+        rtn.contentType = entity.getHeaders().getContentType().getType();
+        rtn.content = entity.getBody();
+
+        return rtn;
+    }
+
 }
 
 

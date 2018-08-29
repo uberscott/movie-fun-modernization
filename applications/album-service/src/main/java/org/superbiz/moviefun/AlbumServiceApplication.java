@@ -8,14 +8,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.superbiz.moviefun.blobstore.BlobStore;
 import org.superbiz.moviefun.blobstore.S3Store;
 
+@ComponentScan({"org.superbiz.moviefun.albums"})
 @SpringBootApplication
 public class AlbumServiceApplication {
 
     public static void main(String... args) {
-        SpringApplication.run(MovieServiceApplication.class, args);
+        SpringApplication.run(AlbumServiceApplication.class, args);
     }
 
 

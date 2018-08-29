@@ -1,6 +1,8 @@
 package org.superbiz.moviefun.movies;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +18,10 @@ public class MoviesController {
     }
 
     @PostMapping
-    public void addMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
         moviesRepository.addMovie(movie);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
     @DeleteMapping("/{movieId}")
