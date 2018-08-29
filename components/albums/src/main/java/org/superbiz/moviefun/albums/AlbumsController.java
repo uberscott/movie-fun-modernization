@@ -19,17 +19,16 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
 @Controller
 @RequestMapping("/albums")
 public class AlbumsController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final AlbumsBean albumsBean;
+    private final AlbumsRepository albumsBean;
     private final BlobStore blobStore;
 
-    public AlbumsController(AlbumsBean albumsBean, BlobStore blobStore) {
+    public AlbumsController(AlbumsRepository albumsBean, BlobStore blobStore) {
         this.albumsBean = albumsBean;
         this.blobStore = blobStore;
     }
@@ -46,6 +45,13 @@ public class AlbumsController {
         model.put("album", albumsBean.find(albumId));
         return "albumDetails";
     }
+
+    @PostMapping()
+    public void addAlbum( @RequestBody Album album )
+    {
+        albumsBean.addAlbum(album);
+    }
+
 
     @PostMapping("/{albumId}/cover")
     public String uploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) {
