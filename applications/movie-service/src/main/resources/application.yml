@@ -8,6 +8,9 @@ spring:
     url: jdbc:mysql://localhost:3306/movies?useSSL=false
     username: root
 
+  application:
+    name: movie-service
+
 logging.level:
   root: WARN
   org.superbiz.moviefun: DEBUG
